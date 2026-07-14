@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ibukun Victoria — Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Space+Mono:wght@400;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #FAF8F2;
+    --bg-alt: #F1EDE2;
+    --card: #0E0C09;
+    --card-text: #F3EEE2;
+    --card-muted: #B9AF97;
+    --line: #DCD6C4;
+    --text: #14110B;
+    --muted: #6E6656;
+    --gold: #B9860B;
+    --gold-bright: #E8B32A;
+  }
+  *{ box-sizing: border-box; margin:0; padding:0; }
+  html{ scroll-behavior: smooth; }
+  body{
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    line-height: 1.5;
+    overflow-x: hidden;
+  }
+  a{ color: inherit; text-decoration: none; }
+
+  ::selection{ background: var(--gold); color: #0B0906; }
+
+  /* ---------- background texture ---------- */
+  .grain{
+    position: fixed; inset:0; pointer-events:none; z-index: 0;
+    background-image: radial-gradient(circle at 20% 20%, rgba(232,179,42,0.06), transparent 40%),
+                       radial-gradient(circle at 80% 70%, rgba(232,179,42,0.05), transparent 45%);
+  }
+
+  /* ---------- top status bar (nod to the Notes app source) ---------- */
+  .statusbar{
+    position: relative; z-index: 2;
+    display:flex; justify-content: space-between; align-items:center;
+    padding: 18px 6vw 0;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px; letter-spacing: 0.08em;
+    color: var(--muted);
+  }
+  .statusbar span:last-child{ color: var(--gold); }
+
+  /* ---------- hero ---------- */
+  header{
+    position: relative; z-index: 2;
+    padding: 60px 6vw 90px;
+    max-width: 1100px;
+  }
+  .eyebrow{
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold);
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 22px;
+  }
+  .eyebrow::before{
+    content: ''; width: 26px; height: 1px; background: var(--gold);
+  }
+  h1{
+    font-family: 'Anton', sans-serif;
+    font-weight: 400;
+    font-size: clamp(52px, 11vw, 128px);
+    line-height: 0.92;
+    text-transform: uppercase;
+    letter-spacing: -0.01em;
+  }
+  h1 .line2{ color: var(--gold); }
+  .tagline{
+    margin-top: 28px;
+    max-width: 560px;
+    font-size: clamp(16px, 2.2vw, 19px);
+    color: var(--muted);
+  }
+  .tagline strong{ color: var(--text); font-weight: 600; }
+
+  .hero-links{
+    margin-top: 40px;
+    display: flex; gap: 14px; flex-wrap: wrap;
+  }
+  .pill{
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    border: 1px solid var(--line);
+    padding: 10px 18px;
+    border-radius: 999px;
+    color: var(--muted);
+    transition: border-color .2s ease, color .2s ease;
+  }
+  .pill:hover{ border-color: var(--gold); color: var(--gold); }
+  .pill.filled{
+    background: var(--text);
+    color: var(--bg);
+    border-color: var(--text);
+    font-weight: 700;
+  }
+  .pill.filled:hover{ background: var(--gold); border-color: var(--gold); color: #14110B; }
+
+  /* ---------- section wrapper ---------- */
+  main{ position: relative; z-index: 2; }
+  section.reel-section{
+    padding: 64px 6vw;
+    border-top: 1px solid var(--line);
+  }
+  .section-head{
+    display: flex; justify-content: space-between; align-items: flex-end;
+    flex-wrap: wrap; gap: 14px;
+    margin-bottom: 34px;
+  }
+  .section-title{
+    font-family: 'Anton', sans-serif;
+    font-weight: 400;
+    text-transform: uppercase;
+    font-size: clamp(28px, 4.5vw, 44px);
+    letter-spacing: -0.01em;
+  }
+  .section-count{
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    color: var(--gold);
+    letter-spacing: 0.08em;
+  }
+  .section-note{
+    color: var(--muted);
+    font-size: 15px;
+    max-width: 480px;
+    margin-top: 6px;
+  }
+
+  /* ---------- reel grid ---------- */
+  .reel-grid{
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 18px;
+  }
+  .reel-card{
+    position: relative;
+    aspect-ratio: 9 / 15;
+    background: linear-gradient(160deg, var(--card), #0f0b06);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow: hidden;
+    transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease;
+  }
+  .reel-card::before{
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(circle at 30% 20%, rgba(232,179,42,0.10), transparent 60%);
+    opacity: 0;
+    transition: opacity .25s ease;
+  }
+  .reel-card:hover{
+    transform: translateY(-6px);
+    border-color: var(--gold);
+    box-shadow: 0 14px 30px rgba(0,0,0,0.45);
+  }
+  .reel-card:hover::before{ opacity: 1; }
+
+  .reel-index{
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--card-muted);
+    letter-spacing: 0.08em;
+  }
+  .play-wrap{
+    align-self: center;
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    border: 1px solid var(--line);
+    display: flex; align-items: center; justify-content: center;
+    transition: border-color .25s ease, background .25s ease;
+  }
+  .reel-card:hover .play-wrap{
+    border-color: var(--gold);
+    background: rgba(232,179,42,0.08);
+  }
+  .play-wrap svg{ fill: var(--gold-bright); width: 16px; height: 16px; }
+
+  .reel-foot{ position: relative; z-index: 1; }
+  .reel-cat{
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gold-bright);
+    margin-bottom: 6px;
+    display: block;
+  }
+  .reel-link{
+    font-size: 13px;
+    color: var(--card-text);
+    word-break: break-all;
+    opacity: 0.85;
+  }
+
+  /* ---------- footer ---------- */
+  footer{
+    padding: 70px 6vw 60px;
+    border-top: 1px solid var(--line);
+    display: flex; flex-direction: column; gap: 18px;
+  }
+  footer .foot-title{
+    font-family: 'Anton', sans-serif;
+    font-size: clamp(30px, 6vw, 56px);
+    text-transform: uppercase;
+    max-width: 780px;
+  }
+  footer .foot-title span{ color: var(--gold); }
+  .foot-row{
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 16px;
+    margin-top: 10px;
+  }
+  .foot-row .muted{ color: var(--muted); font-size: 13px; font-family: 'Space Mono', monospace; }
+
+  @media (max-width: 640px){
+    .reel-grid{ grid-template-columns: repeat(2, 1fr); }
+    .statusbar{ display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="grain"></div>
+
+<div class="statusbar">
+  <span>AKURE, NG</span>
+  <span>@IBUKUN_VICTORIA</span>
+</div>
+
+<header>
+  <div class="eyebrow">Portfolio — Content Direction &amp; Video Edits</div>
+  <h1>IBUKUN<br><span class="line2">VICTORIA</span></h1>
+  <p class="tagline">
+    I write, direct, and edit content that turns scrolls into sales.
+    <strong>Brand storytelling, talking-heads, skits, and everything that gets a page moving —</strong>
+    all shot and edited out of Akure.
+  </p>
+  <div class="hero-links">
+    <a class="pill filled" href="https://www.tiktok.com/@ibukun_victoria" target="_blank" rel="noopener">Watch on TikTok ↗</a>
+    <a class="pill" href="#brand">Brand Storytelling</a>
+    <a class="pill" href="#directing">Content Writing &amp; Directing</a>
+    <a class="pill" href="#talking-head">Talking Head</a>
+    <a class="pill" href="#skits">Skits</a>
+  </div>
+</header>
+
+<main>
+
+  <section class="reel-section" id="brand">
+    <div class="section-head">
+      <div>
+        <div class="section-title">Brand Storytelling &amp; Edits</div>
+        <p class="section-note">Reels built to make a product or a page feel like a story worth trusting.</p>
+      </div>
+      <div class="section-count">03 REELS</div>
+    </div>
+    <div class="reel-grid">
+      <!-- Card template -->
+      <a class="reel-card" href="https://vt.tiktok.com/ZSXMG5DAE/" target="_blank" rel="noopener">
+        <span class="reel-index">01</span>
+        <span class="play-wrap"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>
+        <div class="reel-foot">
+          <span class="reel-cat">Brand Story</span>
+          <span class="reel-link">vt.tiktok.com/ZSXMG5DAE</span>
+        </div>
+      </a>
+      <a class="reel-card" href="https://vt.tiktok.com/ZSXMGXDuQ/" target="_blank" rel="noopener">
+        <span class="reel-index">02</span>
+        <span class="play-wrap"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>
+        <div class="reel-foot">
+          <span class="reel-cat">Brand Story</span>
+          <span class="reel-link">vt.tiktok.com/ZSXMGXDuQ</span>
+        </div>
+      </a>
+      <a class="reel-card" href="https://vt.tiktok.com/ZSXMG5cq6/" target="_blank" rel="noopener">
+        <span class="reel-index">03</span>
+        <span class="play-wrap"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>
+        <div class="reel-foot">
+          <span class="reel-cat">Brand Story</span>
+          <span class="reel-link">vt.tiktok.com/ZSXMG5cq6</span>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <section class="reel-section" id="directing">
+    <div class="section-head">
+      <div>
+        <div class="section-title">Content Writing &amp; Directing</div>
+        <p class="section-note">Scripted, shot-listed, and directed start to finish.</p>
+      </div>
+      <div class="section-count">02 REELS</div>
+    </div>
+    <div class="reel-grid">
+      <a class="reel-card" href="https://vt.tiktok.com/ZSXMtuUR6/" target="_blank" rel="noopener">
+        <span class="reel-index">01</span>
+        <span class="play-wrap"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>
+        <div class="reel-foot">
+          <span class="reel-cat">Writing &amp; Directing</span>
+          <span class="reel-link">vt.tiktok.com/ZSXMtuUR6</span>
+        </div>
+      </a>
+      <a class="reel-card" href="https://vt.tiktok.com/ZSXMt36H7/" target="_blank" rel="noopener">
+        <span class="reel-index">02</span>
+        <span class="play-wrap"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>
+        <div class="reel-foot">
+          <span class="reel-cat">Writing &amp; Directing</span>
+          <span class="reel-link">vt.tiktok.com/ZSXMt36H7</span>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <section class="reel-section" id="talking-head">
+    <div class="section-head">
+      <div>
+        <div class="section-title">Talking Head Edits</div>
+        <p class="section-note">Straight-to-camera, cut tight, held to the point.</p>
+      </div>
+      <div class="section-count">02 REELS</div>
+    </div>
+    <div class="reel-grid">
+      <a class="reel-card" href="https://vt.tiktok.com/ZSXMnDb2r/" target="_blank" rel="noopener">
+        <span class="reel-index">01</span>
+        <span class="play-wrap"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>
+        <div class="reel-foot">
+          <span class="reel-cat">Talking Head</span>
+          <span class="reel-link">vt.tiktok.com/ZSXMnDb2r</span>
+        </div>
+      </a>
+      <a class="reel-card" href="https://vt.tiktok.com/ZSXMGW4YU/" target="_blank" rel="noopener">
+        <span class="reel-index">02</span>
+        <span class="play-wrap"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>
+        <div class="reel-foot">
+          <span class="reel-cat">Talking Head</span>
+          <span class="reel-link">vt.tiktok.com/ZSXMGW4YU</span>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <section class="reel-section" id="skits">
+    <div class="section-head">
+      <div>
+        <div class="section-title">Skit Edits</div>
+        <p class="section-note">Character, comedy, and cut-on-the-beat pacing.</p>
+      </div>
+      <div class="section-count">02 REELS</div>
+    </div>
+    <div class="reel-grid">
+      <a class="reel-card" href="https://vt.tiktok.com/ZSXMtcnyj/" target="_blank" rel="noopener">
+        <span class="reel-index">01</span>
+        <span class="play-wrap"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>
+        <div class="reel-foot">
+          <span class="reel-cat">Skit</span>
+          <span class="reel-link">vt.tiktok.com/ZSXMtcnyj</span>
+        </div>
+      </a>
+      <a class="reel-card" href="https://vt.tiktok.com/ZSXMGwa2w/" target="_blank" rel="noopener">
+        <span class="reel-index">02</span>
+        <span class="play-wrap"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>
+        <div class="reel-foot">
+          <span class="reel-cat">Skit</span>
+          <span class="reel-link">vt.tiktok.com/ZSXMGwa2w</span>
+        </div>
+      </a>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="foot-title">Got a page that needs to move? <span>Let's build the content.</span></div>
+  <div class="foot-row">
+    <span class="muted">IBUKUN VICTORIA — AKURE, NIGERIA</span>
+    <a class="pill filled" href="https://www.tiktok.com/@ibukun_victoria" target="_blank" rel="noopener">@ibukun_victoria ↗</a>
+  </div>
+</footer>
+
+</body>
+</html>
